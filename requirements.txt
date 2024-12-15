@@ -1,0 +1,34 @@
+# Core Framework
+fastapi==0.109.0
+uvicorn==0.27.0
+pydantic[email]==2.5.3
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+psycopg2-binary==2.9.9  # For PostgreSQL
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0  # For JWT tokens
+passlib[bcrypt]==1.7.4  # For password hashing
+python-multipart==0.0.6  # For form data handling
+
+# Environment Variables
+python-dotenv==1.0.0
+
+# Date/Time handling
+python-dateutil==2.8.2
+
+# Optional but recommended
+# For development and testing
+pytest==7.4.4
+httpx==0.26.0  # For async testing
+
+# For response formatting
+ujson==5.9.0
+pydantic-settings==2.0.1.
+
+# For background tasks (if needed)
+# celery==5.3.6
+# redis==5.0.1
+
