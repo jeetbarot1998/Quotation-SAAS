@@ -27,6 +27,7 @@ httpx==0.26.0  # For async testing
 # For response formatting
 ujson==5.9.0
 pydantic-settings==2.0.1.
+alembic==1.14.0
 
 # For background tasks (if needed)
 # celery==5.3.6
