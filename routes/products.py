@@ -4,7 +4,8 @@ import uuid
 from sqlalchemy.orm import Session, joinedload
 from database.dependencies import get_db
 from database.session import org_id_ctx
-from models.product import Product, ProductResponse, ProductCreate
+from schemas.product import ProductResponse, ProductCreate
+from models import Product
 
 # Create router
 router = APIRouter()

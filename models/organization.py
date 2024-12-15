@@ -1,9 +1,10 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
+from models.base import Base
 
-class Organization(Base):
+
+class Organization( Base):
     """
     Organization model - represents a tenant
     This is NOT tenant-aware as it's the tenant definition itself

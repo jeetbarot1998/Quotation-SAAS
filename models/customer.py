@@ -1,9 +1,6 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import declarative_base
-from models.base import TenantAwareModel
-
-
-Base = declarative_base()
+from models.base import TenantAwareModel, Base
 
 
 class Customer(Base, TenantAwareModel):

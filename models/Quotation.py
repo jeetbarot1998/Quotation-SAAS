@@ -1,9 +1,6 @@
 from sqlalchemy import Column, String, Numeric, ForeignKey, Integer
-from sqlalchemy.orm import relationship, declarative_base
-from models.base import TenantAwareModel
-
-Base = declarative_base()
-
+from sqlalchemy.orm import relationship
+from models.base import TenantAwareModel, Base
 
 class QuotationItem(Base):
     __tablename__ = "quotation_items"
