@@ -7,6 +7,7 @@ from models.quotation import Quotation,QuotationItem
 
 # This list can be used for reference if needed
 __all__ = [
+    'Base',
     'Organization',
     'Product',
     'Customer',

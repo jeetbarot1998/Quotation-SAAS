@@ -3,9 +3,14 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+import os
+import sys
+
+# Add the project root directory to Python path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 # Import your models and config
-from models import Organization, Product, Customer, Quotation, QuotationItem
+# from models import Organization, Product, Customer, Quotation, QuotationItem
 from models.base import Base
 
 
@@ -20,7 +25,7 @@ fileConfig(config.config_file_name)
 # Set the database URL from our settings
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
-models_list = [Organization, Product, Customer, Quotation, QuotationItem]
+# models_list = [Organization, Product, Customer, Quotation, QuotationItem]
 
 # Add your model's MetaData object for 'autogenerate' support
 target_metadata = Base.metadata
@@ -57,3 +62,8 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+
+
+
+# alembic revision --autogenerate -m "Description of changes"
+# alembic upgrade head

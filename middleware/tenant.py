@@ -16,7 +16,7 @@ class TenantMiddleware(BaseHTTPMiddleware):
         self.public_paths = {
             "/docs",  # Swagger UI
             "/redoc",  # ReDoc UI
-            "/openapi.json"  # OpenAPI schemas
+            "/openapi.json",  # OpenAPI schemas
             "/api/quotation/organizations/"
         }
 

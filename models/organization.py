@@ -12,5 +12,6 @@ class Organization( Base):
     __tablename__ = "organizations"
 
     id = Column(String(36), primary_key=True)
+    # id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
     subdomain = Column(String(50), unique=True, nullable=False)

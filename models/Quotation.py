@@ -2,14 +2,18 @@ from sqlalchemy import Column, String, Numeric, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from models.base import TenantAwareModel, Base
 
-class QuotationItem(Base):
+
+class QuotationItem(Base, TenantAwareModel):
     __tablename__ = "quotation_items"
 
-    id = Column(String, primary_key=True)
-    product_id = Column(String, ForeignKey("products.id"))
-    quantity = Column(Integer)
+    id = Column(String(36), primary_key=True)
+    quotation_id = Column(String(36), ForeignKey("quotations.id"), nullable=False)
+    product_id = Column(String(36), ForeignKey("products.id"), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    unit_price = Column(Numeric(10, 2), nullable=False)
 
-    # Many-to-One relationship
+    # Define relationships
+    quotation = relationship("Quotation", back_populates="items")
     product = relationship("Product", back_populates="quotation_items")
 
 class Quotation(Base, TenantAwareModel):
