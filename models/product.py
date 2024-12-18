@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy import Column, String, Numeric, DateTime, Integer, ForeignKey, Text
 from sqlalchemy.orm import relationship
 

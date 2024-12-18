@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import routes.products as products
 import routes.quotation as quotation
 import routes.organization as org
+import routes.auth as auth
 
 app = FastAPI(
     title="Multi-tenant Product Management API",
@@ -36,6 +37,7 @@ app.add_middleware(
 app.include_router(products.router, prefix="/api")
 app.include_router(quotation.router, prefix="/api")
 app.include_router(org.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
 
 if __name__ == "__main__":
     import uvicorn

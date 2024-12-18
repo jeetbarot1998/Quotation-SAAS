@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
 from typing import List
 import uuid
+
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session, joinedload
-from database.dependencies import get_db
+from database.dependencies import get_db, get_current_user
 from database.session import org_id_ctx
 from schemas.product import ProductResponse, ProductCreate
 from models import Product
@@ -14,6 +16,7 @@ router = APIRouter(
     responses={404: {"description": "Not found"}}
 )
 
+security = HTTPBearer()
 
 async def get_current_org_id(request: Request) -> str:
     """

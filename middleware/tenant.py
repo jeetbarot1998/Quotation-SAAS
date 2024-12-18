@@ -17,7 +17,8 @@ class TenantMiddleware(BaseHTTPMiddleware):
             "/docs",  # Swagger UI
             "/redoc",  # ReDoc UI
             "/openapi.json",  # OpenAPI schemas
-            "/api/quotation/organizations/"
+            "/api/quotation/organizations/",
+            "/api/auth",
         }
 
     @debug_query

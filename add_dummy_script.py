@@ -7,11 +7,14 @@ from models.organization import Organization
 from models.customer import Customer
 from models.product import Product
 from models.quotation import Quotation, QuotationItem
+from auth.security import get_password_hash
+from models.user import User
 
 # Create database engine
 engine = create_engine(settings.DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 db = SessionLocal()
+
 
 def create_dummy_data():
     try:
@@ -24,6 +27,30 @@ def create_dummy_data():
         db.flush()
 
         print(f"Created organization: {org.name} with ID: {org.id}")
+
+        # Create admin and regular users
+        admin_user = User(
+            email="admin@acme.com",
+            hashed_password=get_password_hash("Asdfghjkl@123"),
+            full_name="Admin User",
+            role="admin",
+            org_id=org.id
+        )
+
+        regular_user = User(
+            email="user@acme.com",
+            hashed_password=get_password_hash("Asdfghjkl@123"),
+            full_name="Regular User",
+            role="user",
+            org_id=org.id
+        )
+
+        db.add(admin_user)
+        db.add(regular_user)
+        db.flush()
+
+        print(f"Created admin user: {admin_user.email}")
+        print(f"Created regular user: {regular_user.email}")
 
         # Create a customer
         customer = Customer(
@@ -115,6 +142,7 @@ def create_dummy_data():
         raise
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     create_dummy_data()

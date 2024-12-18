@@ -4,6 +4,7 @@ from models.organization import Organization
 from models.product import Product
 from models.customer import Customer
 from models.quotation import Quotation,QuotationItem
+from models.user import User
 
 # This list can be used for reference if needed
 __all__ = [
@@ -12,5 +13,6 @@ __all__ = [
     'Product',
     'Customer',
     'Quotation',
-    'QuotationItem'
+    'QuotationItem',
+    'User'
 ]
