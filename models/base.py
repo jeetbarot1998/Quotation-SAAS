@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Integer
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.ext.declarative import declared_attr
 
@@ -11,7 +11,7 @@ class TenantAwareModel:
     """
     @declared_attr
     def org_id(cls):
-        return Column(String(36), ForeignKey("organizations.id"), nullable=False)
+        return Column(Integer, ForeignKey("organizations.id"), nullable=False)
 
     @declared_attr
     def organization(cls):

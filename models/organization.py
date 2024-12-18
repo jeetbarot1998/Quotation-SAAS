@@ -1,17 +1,13 @@
-from sqlalchemy import Column, String
-from sqlalchemy.orm import declarative_base
-
+from sqlalchemy import Column, String, Integer, DateTime
+from datetime import datetime
 from models.base import Base
 
 
-class Organization( Base):
-    """
-    Organization model - represents a tenant
-    This is NOT tenant-aware as it's the tenant definition itself
-    """
+class Organization(Base):
     __tablename__ = "organizations"
 
-    id = Column(String(36), primary_key=True)
-    # id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
     subdomain = Column(String(50), unique=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

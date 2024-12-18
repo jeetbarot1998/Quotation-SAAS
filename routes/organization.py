@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=OrganizationResponse, status_code=201)
+@router.post("", response_model=OrganizationResponse, status_code=201)
 async def create_organization(
         org_data: OrganizationCreate,
         db: Session = Depends(get_db)
@@ -47,7 +47,7 @@ async def create_organization(
         )
 
 
-@router.get("/", response_model=List[OrganizationResponse])
+@router.get("", response_model=List[OrganizationResponse])
 async def list_organizations(
         skip: int = Query(0, ge=0),
         limit: int = Query(10, ge=1, le=100),

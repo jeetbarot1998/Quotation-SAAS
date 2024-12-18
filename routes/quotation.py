@@ -7,10 +7,14 @@ from models.customer import Customer
 from routes.products import get_current_org_id
 
 # Create router
-router = APIRouter()
+router = APIRouter(
+    prefix="/quotations",
+    tags=["Quotations"],
+    responses={404: {"description": "Not found"}}
+)
 
 @router.get(
-    "/quotations/{quotation_id}",
+    "",
     tags=["Quotations"],
     summary="Get quotation details",
     responses={

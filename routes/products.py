@@ -8,7 +8,11 @@ from schemas.product import ProductResponse, ProductCreate
 from models import Product
 
 # Create router
-router = APIRouter()
+router = APIRouter(
+    prefix="/products",
+    tags=["Products"],
+    responses={404: {"description": "Not found"}}
+)
 
 
 async def get_current_org_id(request: Request) -> str:

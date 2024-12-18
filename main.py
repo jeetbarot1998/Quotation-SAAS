@@ -33,9 +33,9 @@ app.add_middleware(
 )
 
 # Include the routes
-app.include_router(products.router, prefix="/api/products")
-app.include_router(quotation.router, prefix="/api/quotation")
-app.include_router(org.router, prefix="/api/organization")
+app.include_router(products.router, prefix="/api")
+app.include_router(quotation.router, prefix="/api")
+app.include_router(org.router, prefix="/api")
 
 if __name__ == "__main__":
     import uvicorn

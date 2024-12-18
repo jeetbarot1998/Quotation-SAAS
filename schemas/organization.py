@@ -17,7 +17,7 @@ class OrganizationUpdate(BaseModel):
     description: Optional[str] = Field(None, max_length=500)
 
 class OrganizationResponse(OrganizationBase):
-    id: str
+    id: int
     created_at: datetime
     updated_at: datetime
 

@@ -1,1 +1,11 @@
 Generic single-database configuration.
+
+For making new DB
+1. Go to SQL workbench and run
+    DROP SCHEMA public CASCADE;
+    CREATE SCHEMA public;
+2. In code rm alembic/versions/*
+3. # Generate new migration:
+    alembic revision --autogenerate -m "initial schema"
+    # Apply the migration:
+    alembic upgrade head

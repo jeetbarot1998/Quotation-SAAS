@@ -21,7 +21,7 @@ class TenantMiddleware(BaseHTTPMiddleware):
         }
 
     @debug_query
-    def get_organization(self, subdomain: str) -> Query:
+    def get_organization(self, subdomain: str) -> Organization:
         return self.db.query(Organization).filter_by(subdomain=subdomain)
 
     async def dispatch(self, request: Request, call_next):
@@ -61,7 +61,7 @@ class TenantMiddleware(BaseHTTPMiddleware):
                 parts = host.split('.')
                 if parts[0] == 'localhost':
                     return 'default'  # Use 'default' for localhost without subdomain
-                return parts[0] if len(parts) > 2 else None
+                return parts[0] if len(parts) > 1 else None
 
             # Handle production domain
             parts = host.split('.')
@@ -72,5 +72,6 @@ class TenantMiddleware(BaseHTTPMiddleware):
 
             return None
 
-        except Exception:
+        except Exception as e:
+            print(f"Error parsing subdomain: {e}")  # Add logging
             return None
