@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime, Text
 from datetime import datetime
 from models.base import Base
 
@@ -11,3 +11,5 @@ class Organization(Base):
     subdomain = Column(String(50), unique=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    description = Column(Text, nullable=True)
+    email = Column(String(100), nullable=True)

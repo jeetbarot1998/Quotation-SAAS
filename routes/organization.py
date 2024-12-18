@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, Depends, Query
 from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-import uuid
 
 from database.dependencies import get_db
 from models.organization import Organization
@@ -29,7 +28,6 @@ async def create_organization(
     """
     try:
         organization = Organization(
-            id=str(uuid.uuid4()),
             name=org_data.name,
             subdomain=org_data.subdomain.lower(),
             email=org_data.email,

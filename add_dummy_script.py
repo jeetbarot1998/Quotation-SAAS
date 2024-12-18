@@ -18,10 +18,20 @@ db = SessionLocal()
 
 def create_dummy_data():
     try:
-        # Create organizations
+        # Create organizations with new fields
         orgs = [
-            Organization(name="Acme Corp", subdomain="acme"),
-            Organization(name="Yanzo Corp", subdomain="yanzo")
+            Organization(
+                name="Acme Corp",
+                subdomain="acme",
+                description="A leading technology solutions provider",
+                email="contact@acme.com"
+            ),
+            Organization(
+                name="Yanzo Corp",
+                subdomain="yanzo",
+                description="Innovative software development company",
+                email="contact@yanzo.com"
+            )
         ]
 
         for org in orgs:

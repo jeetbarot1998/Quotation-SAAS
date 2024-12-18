@@ -1,8 +1,8 @@
-"""adding all tables including users
+"""initial schema
 
-Revision ID: 1aee8d995a11
+Revision ID: 625517e802fd
 Revises: 
-Create Date: 2024-12-18 15:46:52.336762
+Create Date: 2024-12-18 17:50:08.900357
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1aee8d995a11'
+revision = '625517e802fd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,8 @@ def upgrade() -> None:
     sa.Column('subdomain', sa.String(length=50), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('email', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('subdomain')
     )
