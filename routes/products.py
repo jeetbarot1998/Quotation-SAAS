@@ -4,10 +4,14 @@ import uuid
 
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session, joinedload
+
+from auth.security import verify_token
 from database.dependencies import get_db, get_current_user
 from database.session import org_id_ctx
 from schemas.product import ProductResponse, ProductCreate
 from models import Product
+from schemas.user import TokenData
+from utils.validate_org_domain import validate_org_domain
 
 # Create router
 router = APIRouter(
@@ -32,8 +36,11 @@ async def get_current_org_id(request: Request) -> str:
     summary="List all products",
     response_description="List of products for the current organization"
 )
+@validate_org_domain()
 async def list_products(
+        request: Request,
         db: Session = Depends(get_db),
+        token_data: TokenData = Depends(verify_token),
         current_org_id: str = Depends(get_current_org_id)
 ):
     """

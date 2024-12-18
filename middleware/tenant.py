@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from database.session import org_id_ctx
 from models.organization import Organization
 from utils.debug_query import debug_query  # Import the decorator function
+from utils.validate_org_domain import get_subdomain
 
 
 class TenantMiddleware(BaseHTTPMiddleware):
@@ -36,7 +37,7 @@ class TenantMiddleware(BaseHTTPMiddleware):
 
         # Get host from request headers
         host = request.headers.get('host', '')
-        subdomain = self.get_subdomain(host)
+        subdomain = get_subdomain(host)
 
         if not subdomain:
             raise HTTPException(status_code=400, detail="Invalid subdomain")
@@ -53,26 +54,3 @@ class TenantMiddleware(BaseHTTPMiddleware):
 
         response = await call_next(request)
         return response
-
-    def get_subdomain(self, host: str):
-        try:
-            # Handle localhost
-            if 'localhost' in host:
-                host = host.split(':')[0]
-                parts = host.split('.')
-                if parts[0] == 'localhost':
-                    return 'default'  # Use 'default' for localhost without subdomain
-                return parts[0] if len(parts) > 1 else None
-
-            # Handle production domain
-            parts = host.split('.')
-            if len(parts) > 2:
-                return parts[0]
-            elif len(parts) == 2:
-                return 'default'  # Use 'default' for main domain without subdomain
-
-            return None
-
-        except Exception as e:
-            print(f"Error parsing subdomain: {e}")  # Add logging
-            return None

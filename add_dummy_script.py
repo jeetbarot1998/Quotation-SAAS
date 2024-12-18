@@ -18,119 +18,116 @@ db = SessionLocal()
 
 def create_dummy_data():
     try:
-        # Create an organization
-        org = Organization(
-            name="Acme Corp",
-            subdomain="acme"
-        )
-        db.add(org)
-        db.flush()
-
-        print(f"Created organization: {org.name} with ID: {org.id}")
-
-        # Create admin and regular users
-        admin_user = User(
-            email="admin@acme.com",
-            hashed_password=get_password_hash("Asdfghjkl@123"),
-            full_name="Admin User",
-            role="admin",
-            org_id=org.id
-        )
-
-        regular_user = User(
-            email="user@acme.com",
-            hashed_password=get_password_hash("Asdfghjkl@123"),
-            full_name="Regular User",
-            role="user",
-            org_id=org.id
-        )
-
-        db.add(admin_user)
-        db.add(regular_user)
-        db.flush()
-
-        print(f"Created admin user: {admin_user.email}")
-        print(f"Created regular user: {regular_user.email}")
-
-        # Create a customer
-        customer = Customer(
-            name="John Doe",
-            email="john.doe@example.com",
-            org_id=org.id
-        )
-        db.add(customer)
-        db.flush()
-        print(f"Created customer: {customer.name} with ID: {customer.id}")
-
-        # Create some products with image URLs
-        products = [
-            Product(
-                name="Laptop",
-                price=Decimal("999.99"),
-                sku="LAP-001",
-                image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
-                org_id=org.id
-            ),
-            Product(
-                name="Mouse",
-                price=Decimal("29.99"),
-                sku="MOU-001",
-                image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
-                org_id=org.id
-            ),
-            Product(
-                name="Keyboard",
-                price=Decimal("59.99"),
-                sku="KEY-001",
-                image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
-                org_id=org.id
-            )
+        # Create organizations
+        orgs = [
+            Organization(name="Acme Corp", subdomain="acme"),
+            Organization(name="Yanzo Corp", subdomain="yanzo")
         ]
 
-        for product in products:
-            db.add(product)
-        db.flush()
-        print(f"Created {len(products)} products")
+        for org in orgs:
+            db.add(org)
+            db.flush()
+            print(f"Created organization: {org.name} with ID: {org.id}")
 
-        # Create a quotation
-        quotation = Quotation(
-            quote_number=f"Q-2024-{org.id:04d}-001",
-            customer_id=customer.id,
-            total_amount=Decimal("1089.97"),
-            org_id=org.id
-        )
-        db.add(quotation)
-        db.flush()
-
-        # Create quotation items
-        quotation_items = [
-            QuotationItem(
-                quotation_id=quotation.id,
-                product_id=products[0].id,
-                quantity=1,
-                unit_price=products[0].price,
-                org_id=org.id
-            ),
-            QuotationItem(
-                quotation_id=quotation.id,
-                product_id=products[1].id,
-                quantity=1,
-                unit_price=products[1].price,
-                org_id=org.id
-            ),
-            QuotationItem(
-                quotation_id=quotation.id,
-                product_id=products[2].id,
-                quantity=1,
-                unit_price=products[2].price,
+            # Create users for each org
+            admin = User(
+                email=f"admin@{org.subdomain}.com",
+                hashed_password=get_password_hash("Asdfghjkl@123"),
+                full_name="Admin User",
+                role="admin",
                 org_id=org.id
             )
-        ]
 
-        for item in quotation_items:
-            db.add(item)
+            user = User(
+                email=f"user@{org.subdomain}.com",
+                hashed_password=get_password_hash("Asdfghjkl@123"),
+                full_name="Regular User",
+                role="user",
+                org_id=org.id
+            )
 
-        print(f"Created quotation {quotation.quote_number} with {len(quotation_items)} items")
+            db.add(admin)
+            db.add(user)
+            db.flush()
+            print(f"Created users for {org.name}")
+
+            # Create customer
+            customer = Customer(
+                name="John Doe",
+                email=f"john@{org.subdomain}.com",
+                org_id=org.id
+            )
+            db.add(customer)
+            db.flush()
+
+            # Create products
+            products = [
+                Product(
+                    name="Laptop",
+                    price=Decimal("999.99"),
+                    sku=f"LAP-001",
+                    image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
+                    org_id=org.id
+                ),
+                Product(
+                    name="Mouse",
+                    price=Decimal("29.99"),
+                    sku=f"MOU-001",
+                    image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
+                    org_id=org.id
+                ),
+                Product(
+                    name="Keyboard",
+                    price=Decimal("59.99"),
+                    sku=f"KEY-001",
+                    image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
+                    org_id=org.id
+                )
+            ]
+
+            for product in products:
+                db.add(product)
+            db.flush()
+
+            # Create quotation
+            quotation = Quotation(
+                quote_number=f"Q-2024-{org.id:04d}-001",
+                customer_id=customer.id,
+                total_amount=Decimal("1089.97"),
+                org_id=org.id
+            )
+            db.add(quotation)
+            db.flush()
+
+            # Create quotation items
+            quotation_items = [
+                QuotationItem(
+                    quotation_id=quotation.id,
+                    product_id=products[0].id,
+                    quantity=1,
+                    unit_price=products[0].price,
+                    org_id=org.id
+                ),
+                QuotationItem(
+                    quotation_id=quotation.id,
+                    product_id=products[1].id,
+                    quantity=1,
+                    unit_price=products[1].price,
+                    org_id=org.id
+                ),
+                QuotationItem(
+                    quotation_id=quotation.id,
+                    product_id=products[2].id,
+                    quantity=1,
+                    unit_price=products[2].price,
+                    org_id=org.id
+                )
+            ]
+
+            for item in quotation_items:
+                db.add(item)
+
+            print(f"Created all data for {org.name}")
 
         # Commit all changes
         db.commit()
