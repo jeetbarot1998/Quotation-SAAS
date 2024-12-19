@@ -1,8 +1,8 @@
-"""initial schema
+"""enhance_quotation_tables
 
-Revision ID: 625517e802fd
+Revision ID: 38740906726f
 Revises: 
-Create Date: 2024-12-18 17:50:08.900357
+Create Date: 2024-12-19 22:58:48.549990
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '625517e802fd'
+revision = '38740906726f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -65,14 +65,30 @@ def upgrade() -> None:
     )
     op.create_table('quotations',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('quote_number', sa.String(length=20), nullable=False),
-    sa.Column('customer_id', sa.Integer(), nullable=True),
+    sa.Column('quote_number', sa.String(length=50), nullable=False),
+    sa.Column('customer_id', sa.Integer(), nullable=False),
     sa.Column('total_amount', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('validity_period', sa.DateTime(), nullable=False),
+    sa.Column('shipping_address', sa.Text(), nullable=True),
+    sa.Column('tax_amount', sa.Numeric(precision=10, scale=2), nullable=True),
+    sa.Column('discount_amount', sa.Numeric(precision=10, scale=2), nullable=True),
+    sa.Column('payment_terms', sa.Text(), nullable=True),
+    sa.Column('installation_required', sa.Boolean(), nullable=True),
+    sa.Column('reference_number', sa.String(length=100), nullable=True),
+    sa.Column('sales_rep_id', sa.Integer(), nullable=True),
+    sa.Column('notes', sa.Text(), nullable=True),
+    sa.Column('sla_terms', sa.Text(), nullable=True),
+    sa.Column('warranty_info', sa.Text(), nullable=True),
+    sa.Column('compliance_certificates', sa.Text(), nullable=True),
+    sa.Column('environmental_impact', sa.Text(), nullable=True),
+    sa.Column('technical_support_details', sa.Text(), nullable=True),
+    sa.Column('status', sa.String(length=20), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('org_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], ),
     sa.ForeignKeyConstraint(['org_id'], ['organizations.id'], ),
+    sa.ForeignKeyConstraint(['sales_rep_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('quotation_items',
@@ -81,6 +97,8 @@ def upgrade() -> None:
     sa.Column('product_id', sa.Integer(), nullable=False),
     sa.Column('quantity', sa.Integer(), nullable=False),
     sa.Column('unit_price', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('discount_percent', sa.Numeric(precision=5, scale=2), nullable=True),
+    sa.Column('notes', sa.Text(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('org_id', sa.Integer(), nullable=False),

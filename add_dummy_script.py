@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from decimal import Decimal
+from datetime import datetime, timedelta
 
 from configs.db_config import settings
 from models.organization import Organization
@@ -18,7 +19,7 @@ db = SessionLocal()
 
 def create_dummy_data():
     try:
-        # Create organizations with new fields
+        # Create organizations
         orgs = [
             Organization(
                 name="Acme Corp",
@@ -48,6 +49,14 @@ def create_dummy_data():
                 org_id=org.id
             )
 
+            sales_rep = User(
+                email=f"sales@{org.subdomain}.com",
+                hashed_password=get_password_hash("Asdfghjkl@123"),
+                full_name="Sales Representative",
+                role="sales",
+                org_id=org.id
+            )
+
             user = User(
                 email=f"user@{org.subdomain}.com",
                 hashed_password=get_password_hash("Asdfghjkl@123"),
@@ -57,6 +66,7 @@ def create_dummy_data():
             )
 
             db.add(admin)
+            db.add(sales_rep)
             db.add(user)
             db.flush()
             print(f"Created users for {org.name}")
@@ -73,23 +83,23 @@ def create_dummy_data():
             # Create products
             products = [
                 Product(
-                    name="Laptop",
+                    name="Laptop Pro X1",
                     price=Decimal("999.99"),
-                    sku=f"LAP-001",
+                    sku="LAP-001",
                     image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
                     org_id=org.id
                 ),
                 Product(
-                    name="Mouse",
+                    name="Wireless Mouse Elite",
                     price=Decimal("29.99"),
-                    sku=f"MOU-001",
+                    sku="MOU-001",
                     image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
                     org_id=org.id
                 ),
                 Product(
-                    name="Keyboard",
+                    name="Mechanical Keyboard Pro",
                     price=Decimal("59.99"),
-                    sku=f"KEY-001",
+                    sku="KEY-001",
                     image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
                     org_id=org.id
                 )
@@ -104,7 +114,31 @@ def create_dummy_data():
                 quote_number=f"Q-2024-{org.id:04d}-001",
                 customer_id=customer.id,
                 total_amount=Decimal("1089.97"),
-                org_id=org.id
+                org_id=org.id,
+                # Essential Fields
+                validity_period=datetime.utcnow() + timedelta(days=30),
+
+                # Conditional Fields
+                shipping_address="123 Business Street, Tech City, TC 12345",
+                tax_amount=Decimal("87.20"),
+                discount_amount=Decimal("50.00"),
+                payment_terms="Net 30",
+                installation_required=True,
+
+                # Optional Fields
+                reference_number="PO-2024-001",
+                sales_rep_id=sales_rep.id,
+                notes="Special handling required for laptop delivery",
+
+                # Industry-Specific Fields
+                sla_terms="Next business day support included",
+                warranty_info="1 year manufacturer warranty on all products",
+                compliance_certificates="ISO 9001, Energy Star",
+                environmental_impact="Energy efficient products, recyclable packaging",
+                technical_support_details="24/7 technical support included",
+
+                # Status
+                status="draft"
             )
             db.add(quotation)
             db.flush()
@@ -116,6 +150,8 @@ def create_dummy_data():
                     product_id=products[0].id,
                     quantity=1,
                     unit_price=products[0].price,
+                    discount_percent=Decimal("5.00"),
+                    notes="Includes pre-installed software package",
                     org_id=org.id
                 ),
                 QuotationItem(
@@ -123,6 +159,8 @@ def create_dummy_data():
                     product_id=products[1].id,
                     quantity=1,
                     unit_price=products[1].price,
+                    discount_percent=Decimal("0.00"),
+                    notes="Wireless receiver included",
                     org_id=org.id
                 ),
                 QuotationItem(
@@ -130,6 +168,8 @@ def create_dummy_data():
                     product_id=products[2].id,
                     quantity=1,
                     unit_price=products[2].price,
+                    discount_percent=Decimal("10.00"),
+                    notes="Extra keycaps included",
                     org_id=org.id
                 )
             ]
