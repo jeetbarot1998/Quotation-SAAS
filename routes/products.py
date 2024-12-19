@@ -1,7 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
 from typing import List
-import uuid
-
 from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 
@@ -79,8 +77,10 @@ async def list_products(
 )
 @validate_org_domain()
 async def create_product(
+        request: Request,
         product_data: ProductCreate,
         db: Session = Depends(get_db),
+        token_data: TokenData = Depends(verify_token),
         current_org_id: str = Depends(get_current_org_id)
 ):
     """

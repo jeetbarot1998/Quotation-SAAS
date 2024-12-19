@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from decimal import Decimal
 from datetime import datetime, timedelta
-import uuid
 
 # Import your models here
 from models import Base, Organization, User, Customer, Product, Quotation, QuotationItem
+from auth.security import get_password_hash
 
 # Database configuration
 DATABASE_URL = "postgresql://user:password@localhost/dbname"
@@ -19,16 +19,16 @@ def create_dummy_data():
         # Create organizations
         orgs = [
             Organization(
-                name="TechCorp Solutions",
-                subdomain="techcorp",
-                description="Enterprise Technology Solutions",
-                email="contact@techcorp.com"
+                name="Acme Corp",
+                subdomain="acme",
+                description="A leading technology solutions provider",
+                email="contact@acme.com"
             ),
             Organization(
-                name="Digital Dynamics",
-                subdomain="digidyn",
-                description="Digital Transformation Services",
-                email="info@digidyn.com"
+                name="Yanzo Corp",
+                subdomain="yanzo",
+                description="Innovative software development company",
+                email="contact@yanzo.com"
             )
         ]
 
@@ -41,19 +41,24 @@ def create_dummy_data():
             users = [
                 User(
                     email=f"admin@{org.subdomain}.com",
-                    hashed_password="$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewKxcQw8.1w5ExKa",
-                    # Password: Admin123!
+                    hashed_password=get_password_hash("Asdfghjkl@123"),
                     full_name="Admin User",
                     role="admin",
-                    org_id=org.id,
+                    org_id=org.id
                 ),
                 User(
                     email=f"sales@{org.subdomain}.com",
-                    hashed_password="$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewKxcQw8.1w5ExKa",
-                    # Password: Admin123!
-                    full_name="Sales Manager",
+                    hashed_password=get_password_hash("Asdfghjkl@123"),
+                    full_name="Sales Representative",
                     role="sales",
-                    org_id=org.id,
+                    org_id=org.id
+                ),
+                User(
+                    email=f"user@{org.subdomain}.com",
+                    hashed_password=get_password_hash("Asdfghjkl@123"),
+                    full_name="Regular User",
+                    role="user",
+                    org_id=org.id
                 )
             ]
 
