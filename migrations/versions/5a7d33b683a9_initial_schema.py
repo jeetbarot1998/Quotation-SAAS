@@ -1,8 +1,8 @@
-"""enhance_quotation_tables
+"""initial schema
 
-Revision ID: 38740906726f
+Revision ID: 5a7d33b683a9
 Revises: 
-Create Date: 2024-12-19 22:58:48.549990
+Create Date: 2024-12-19 23:20:04.358226
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '38740906726f'
+revision = '5a7d33b683a9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,6 +33,8 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('email', sa.String(length=100), nullable=False),
+    sa.Column('phone', sa.String(length=20), nullable=True),
+    sa.Column('address', sa.Text(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('org_id', sa.Integer(), nullable=False),
@@ -45,6 +47,8 @@ def upgrade() -> None:
     sa.Column('price', sa.Numeric(precision=10, scale=2), nullable=False),
     sa.Column('sku', sa.String(length=50), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('stock_quantity', sa.Integer(), nullable=True),
+    sa.Column('description', sa.Text(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('image_url', sa.Text(), nullable=True),
     sa.Column('org_id', sa.Integer(), nullable=False),

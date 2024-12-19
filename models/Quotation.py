@@ -41,7 +41,8 @@ class Quotation(Base, TenantAwareModel):
     # Relationships
     customer = relationship("Customer", back_populates="quotations")
     items = relationship("QuotationItem", back_populates="quotation", cascade="all, delete-orphan")
-    sales_rep = relationship("User")
+    sales_rep = relationship("User", back_populates="quotations_created")
+    organization = relationship("Organization", back_populates="quotations")
 
 
 class QuotationItem(Base, TenantAwareModel):
@@ -57,7 +58,8 @@ class QuotationItem(Base, TenantAwareModel):
 
     # Relationships
     quotation = relationship("Quotation", back_populates="items")
-    product = relationship("Product")
+    product = relationship("Product", back_populates="quotation_items")
+    organization = relationship("Organization", back_populates="quotation_items")
 
     # Standard Tracking Fields
     created_at = Column(DateTime, default=datetime.utcnow)

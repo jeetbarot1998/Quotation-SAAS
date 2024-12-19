@@ -1,5 +1,8 @@
 from sqlalchemy import Column, String, DateTime, Integer
 from datetime import datetime
+
+from sqlalchemy.orm import relationship
+
 from models import Base
 from models.base import TenantAwareModel
 
@@ -14,3 +17,7 @@ class User(Base, TenantAwareModel):
     role = Column(String(50), nullable=False)  # admin, user, etc.
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    quotations_created = relationship("Quotation", back_populates="sales_rep")
+    organization = relationship("Organization", back_populates="users")

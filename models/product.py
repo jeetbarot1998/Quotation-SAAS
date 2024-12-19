@@ -13,6 +13,11 @@ class Product(Base, TenantAwareModel):
     price = Column(Numeric(10, 2), nullable=False)
     sku = Column(String(50), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    stock_quantity = Column(Integer, default=0)
+    description = Column(Text, nullable=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     image_url = Column(Text, nullable=True)  # Using Text instead of String(255)
+
+    # Relationships
     quotation_items = relationship("QuotationItem", back_populates="product")
+    organization = relationship("Organization", back_populates="products")

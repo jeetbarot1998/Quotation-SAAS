@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, Integer, DateTime
+from sqlalchemy import Column, String, ForeignKey, Integer, DateTime, Text
 from datetime import datetime
 
 from sqlalchemy.orm import relationship
@@ -12,7 +12,11 @@ class Customer(Base, TenantAwareModel):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False)
+    phone = Column(String(20), nullable=True)
+    address = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # Relationships
     quotations = relationship("Quotation", back_populates="customer")
+    organization = relationship("Organization", back_populates="customers")

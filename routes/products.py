@@ -87,7 +87,6 @@ async def create_product(
     Create a new product for the current organization.
     """
     product = Product(
-        id=str(uuid.uuid4()),
         name=product_data.name,
         price=product_data.price,
         sku=product_data.sku,

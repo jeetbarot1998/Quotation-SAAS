@@ -2,105 +2,111 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from decimal import Decimal
 from datetime import datetime, timedelta
+import uuid
 
-from configs.db_config import settings
-from models.organization import Organization
-from models.customer import Customer
-from models.product import Product
-from models.quotation import Quotation, QuotationItem
-from auth.security import get_password_hash
-from models.user import User
+# Import your models here
+from models import Base, Organization, User, Customer, Product, Quotation, QuotationItem
 
-# Create database engine
-engine = create_engine(settings.DATABASE_URL)
+# Database configuration
+DATABASE_URL = "postgresql://user:password@localhost/dbname"
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
-db = SessionLocal()
 
 
 def create_dummy_data():
+    db = SessionLocal()
     try:
         # Create organizations
         orgs = [
             Organization(
-                name="Acme Corp",
-                subdomain="acme",
-                description="A leading technology solutions provider",
-                email="contact@acme.com"
+                name="TechCorp Solutions",
+                subdomain="techcorp",
+                description="Enterprise Technology Solutions",
+                email="contact@techcorp.com"
             ),
             Organization(
-                name="Yanzo Corp",
-                subdomain="yanzo",
-                description="Innovative software development company",
-                email="contact@yanzo.com"
+                name="Digital Dynamics",
+                subdomain="digidyn",
+                description="Digital Transformation Services",
+                email="info@digidyn.com"
             )
         ]
 
         for org in orgs:
             db.add(org)
-            db.flush()
-            print(f"Created organization: {org.name} with ID: {org.id}")
+        db.flush()
 
-            # Create users for each org
-            admin = User(
-                email=f"admin@{org.subdomain}.com",
-                hashed_password=get_password_hash("Asdfghjkl@123"),
-                full_name="Admin User",
-                role="admin",
-                org_id=org.id
-            )
+        # Create users for each organization
+        for org in orgs:
+            users = [
+                User(
+                    email=f"admin@{org.subdomain}.com",
+                    hashed_password="$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewKxcQw8.1w5ExKa",
+                    # Password: Admin123!
+                    full_name="Admin User",
+                    role="admin",
+                    org_id=org.id,
+                ),
+                User(
+                    email=f"sales@{org.subdomain}.com",
+                    hashed_password="$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewKxcQw8.1w5ExKa",
+                    # Password: Admin123!
+                    full_name="Sales Manager",
+                    role="sales",
+                    org_id=org.id,
+                )
+            ]
 
-            sales_rep = User(
-                email=f"sales@{org.subdomain}.com",
-                hashed_password=get_password_hash("Asdfghjkl@123"),
-                full_name="Sales Representative",
-                role="sales",
-                org_id=org.id
-            )
-
-            user = User(
-                email=f"user@{org.subdomain}.com",
-                hashed_password=get_password_hash("Asdfghjkl@123"),
-                full_name="Regular User",
-                role="user",
-                org_id=org.id
-            )
-
-            db.add(admin)
-            db.add(sales_rep)
-            db.add(user)
-            db.flush()
-            print(f"Created users for {org.name}")
-
-            # Create customer
-            customer = Customer(
-                name="John Doe",
-                email=f"john@{org.subdomain}.com",
-                org_id=org.id
-            )
-            db.add(customer)
+            for user in users:
+                db.add(user)
             db.flush()
 
-            # Create products
+            # Create customers for each organization
+            customers = [
+                Customer(
+                    name="John Smith",
+                    email="john.smith@example.com",
+                    phone="+1-555-0123",
+                    address="123 Business Ave, Suite 100, New York, NY 10001",
+                    org_id=org.id
+                ),
+                Customer(
+                    name="Sarah Johnson",
+                    email="sarah.j@example.com",
+                    phone="+1-555-0124",
+                    address="456 Tech Street, San Francisco, CA 94105",
+                    org_id=org.id
+                )
+            ]
+
+            for customer in customers:
+                db.add(customer)
+            db.flush()
+
+            # Create products for each organization
             products = [
                 Product(
-                    name="Laptop Pro X1",
-                    price=Decimal("999.99"),
-                    sku="LAP-001",
-                    image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
+                    name="Enterprise Server X1",
+                    description="High-performance enterprise server",
+                    sku="SRV-001",
+                    price=Decimal("5999.99"),
+                    stock_quantity=10,
                     org_id=org.id
                 ),
                 Product(
-                    name="Wireless Mouse Elite",
-                    price=Decimal("29.99"),
-                    sku="MOU-001",
-                    image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
+                    name="Cloud Security Suite",
+                    description="Complete cloud security solution",
+                    sku="CSS-001",
+                    price=Decimal("1999.99"),
+                    stock_quantity=50,
                     org_id=org.id
                 ),
                 Product(
-                    name="Mechanical Keyboard Pro",
-                    price=Decimal("59.99"),
-                    sku="KEY-001",
-                    image_url="https://support.rebrandly.com/hc/article_attachments/17527840087837",
+                    name="AI Analytics Platform",
+                    description="Enterprise AI analytics solution",
+                    sku="AI-001",
+                    price=Decimal("3999.99"),
+                    stock_quantity=20,
                     org_id=org.id
                 )
             ]
@@ -109,83 +115,55 @@ def create_dummy_data():
                 db.add(product)
             db.flush()
 
-            # Create quotation
-            quotation = Quotation(
-                quote_number=f"Q-2024-{org.id:04d}-001",
-                customer_id=customer.id,
-                total_amount=Decimal("1089.97"),
-                org_id=org.id,
-                # Essential Fields
-                validity_period=datetime.utcnow() + timedelta(days=30),
-
-                # Conditional Fields
-                shipping_address="123 Business Street, Tech City, TC 12345",
-                tax_amount=Decimal("87.20"),
-                discount_amount=Decimal("50.00"),
-                payment_terms="Net 30",
-                installation_required=True,
-
-                # Optional Fields
-                reference_number="PO-2024-001",
-                sales_rep_id=sales_rep.id,
-                notes="Special handling required for laptop delivery",
-
-                # Industry-Specific Fields
-                sla_terms="Next business day support included",
-                warranty_info="1 year manufacturer warranty on all products",
-                compliance_certificates="ISO 9001, Energy Star",
-                environmental_impact="Energy efficient products, recyclable packaging",
-                technical_support_details="24/7 technical support included",
-
-                # Status
-                status="draft"
-            )
-            db.add(quotation)
-            db.flush()
-
-            # Create quotation items
-            quotation_items = [
-                QuotationItem(
-                    quotation_id=quotation.id,
-                    product_id=products[0].id,
-                    quantity=1,
-                    unit_price=products[0].price,
-                    discount_percent=Decimal("5.00"),
-                    notes="Includes pre-installed software package",
-                    org_id=org.id
-                ),
-                QuotationItem(
-                    quotation_id=quotation.id,
-                    product_id=products[1].id,
-                    quantity=1,
-                    unit_price=products[1].price,
-                    discount_percent=Decimal("0.00"),
-                    notes="Wireless receiver included",
-                    org_id=org.id
-                ),
-                QuotationItem(
-                    quotation_id=quotation.id,
-                    product_id=products[2].id,
-                    quantity=1,
-                    unit_price=products[2].price,
-                    discount_percent=Decimal("10.00"),
-                    notes="Extra keycaps included",
+            # Create quotations for each customer
+            for customer in customers:
+                quotation = Quotation(
+                    quote_number=f"Q-{datetime.now().year}-{org.id:04d}-{customer.id:04d}",
+                    customer_id=customer.id,
+                    total_amount=Decimal("11999.97"),
+                    validity_period=datetime.utcnow() + timedelta(days=30),
+                    shipping_address=customer.address,
+                    tax_amount=Decimal("960.00"),
+                    discount_amount=Decimal("500.00"),
+                    payment_terms="Net 30",
+                    installation_required=True,
+                    reference_number=f"REF-{datetime.now().year}-{customer.id:04d}",
+                    sales_rep_id=users[1].id,  # Sales manager
+                    notes="Enterprise deployment package",
+                    sla_terms="99.99% uptime guaranteed",
+                    warranty_info="3-year enterprise warranty",
+                    compliance_certificates="ISO 27001, SOC 2",
+                    environmental_impact="Energy Star certified",
+                    technical_support_details="24/7 dedicated support",
+                    status="draft",
                     org_id=org.id
                 )
-            ]
 
-            for item in quotation_items:
-                db.add(item)
+                db.add(quotation)
+                db.flush()
 
-            print(f"Created all data for {org.name}")
+                # Create quotation items
+                for i, product in enumerate(products):
+                    item = QuotationItem(
+                        quotation_id=quotation.id,
+                        product_id=product.id,
+                        quantity=1,
+                        unit_price=product.price,
+                        discount_percent=Decimal("5.00"),
+                        notes=f"Enterprise license included",
+                        org_id=org.id
+                    )
+                    db.add(item)
+
+                db.flush()
 
         # Commit all changes
         db.commit()
-        print("All data committed successfully!")
+        print("Successfully created dummy data!")
 
     except Exception as e:
-        print(f"An error occurred: {e}")
         db.rollback()
+        print(f"Error creating dummy data: {e}")
         raise
     finally:
         db.close()
