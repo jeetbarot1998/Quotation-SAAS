@@ -1,5 +1,3 @@
-from idlelib.query import Query
-
 from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from sqlalchemy.orm import Session
@@ -18,7 +16,7 @@ class TenantMiddleware(BaseHTTPMiddleware):
             "/docs",  # Swagger UI
             "/redoc",  # ReDoc UI
             "/openapi.json",  # OpenAPI schemas
-            "/api/quotation/organizations/",
+            "/api/organization",
             "/api/auth",
         }
 
@@ -30,7 +28,8 @@ class TenantMiddleware(BaseHTTPMiddleware):
         path = request.url.path
 
         # Allow access to Swagger documentation without tenant validation
-        if path in self.public_paths or path.startswith("/static/") or path.startswith("/docs/"):
+        if (path in self.public_paths or path.startswith("/api/organization")
+                or path.startswith("/static/") or path.startswith("/docs/")):
             return await call_next(request)
 
         print("========== inside middle ware with path : " + str(path))

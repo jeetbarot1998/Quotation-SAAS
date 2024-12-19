@@ -2,11 +2,11 @@ from fastapi import APIRouter, HTTPException, Depends, Request
 from typing import List
 import uuid
 
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from sqlalchemy.orm import Session, joinedload
+from fastapi.security import HTTPBearer
+from sqlalchemy.orm import Session
 
 from auth.security import verify_token
-from database.dependencies import get_db, get_current_user
+from database.dependencies import get_db
 from database.session import org_id_ctx
 from schemas.product import ProductResponse, ProductCreate
 from models import Product
@@ -77,6 +77,7 @@ async def list_products(
         403: {"description": "Invalid organization or insufficient permissions"}
     }
 )
+@validate_org_domain()
 async def create_product(
         product_data: ProductCreate,
         db: Session = Depends(get_db),

@@ -8,7 +8,7 @@ from models.organization import Organization
 from schemas.organization import OrganizationCreate, OrganizationUpdate, OrganizationResponse
 
 router = APIRouter(
-    prefix="/organizations",
+    prefix="/organization",
     tags=["Organizations"],
     responses={404: {"description": "Not found"}}
 )
@@ -88,6 +88,7 @@ async def update_organization(
     organization = db.query(Organization).filter(Organization.id == org_id).first()
     if not organization:
         raise HTTPException(status_code=404, detail="Organization not found")
+
 
     # Update allowed fields
     update_data = org_data.model_dump(exclude_unset=True)
